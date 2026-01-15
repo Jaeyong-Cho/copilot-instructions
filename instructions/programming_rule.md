@@ -1,4 +1,5 @@
 # Global Programming Rules
+- Everything must be written in English.
 
 ## Function Design
 - The length of a single function must not exceed 60 lines.
