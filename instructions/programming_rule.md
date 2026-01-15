@@ -1,3 +1,7 @@
+---
+applyTo: "**"
+---
+
 # Global Programming Rules
 - Everything must be written in English.
 
