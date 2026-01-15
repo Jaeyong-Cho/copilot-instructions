@@ -4,6 +4,7 @@ applyTo: "**"
 
 # Global Programming Rules
 - Everything must be written in English.
+- Emojis must never be used.
 
 ## Function Design
 - The length of a single function must not exceed 60 lines.
