@@ -57,3 +57,15 @@ applyTo: "**"
 - Limit side effects to well-defined boundaries.
 - Code should be structured so that the impact of changes is predictable.
 - Code that is difficult to test should be considered a maintenance risk.
+
+## Logging
+- Logging must be used sparingly and intentionally.
+- Logs should exist only at meaningful boundaries or critical decision points.
+- Do not log information that can be inferred directly from code flow.
+- Avoid repetitive, verbose, or low-value logs.
+- Logs must improve understanding of system behavior, not add noise.
+- Logging must never be used as a substitute for proper error handling.
+- Log messages must be clear, concise, and written in plain language.
+- Avoid logging inside tight loops or high-frequency execution paths.
+- Sensitive or unnecessary internal details must not be logged.
+- The absence of a log should be the default; add logs only when they provide clear diagnostic value.
