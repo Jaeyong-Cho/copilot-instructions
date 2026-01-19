@@ -16,6 +16,9 @@ applyTo: "**"
 - Avoid complex coding techniques; use simple and straightforward syntax.
 - Indentation must not be nested more than two levels deep.
 - Use early returns to reduce nested control structures.
+- Each function must include at least two assertions that explicitly validate critical assumptions or invariants.
+- Assertions must check meaningful preconditions, postconditions, or internal invariants, not trivial or redundant conditions.
+- Assertions must not be used as a replacement for proper error handling in production paths.
 
 ## Naming Conventions
 - Names must clearly express intent and responsibility.
