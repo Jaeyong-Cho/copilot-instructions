@@ -73,15 +73,33 @@ applyTo: "**"
   - Meaningful edge cases derived from contract boundaries
 - If a function cannot be accompanied by a clear test example, its design is considered incomplete.
 
-### Test Execution and Visibility
+---
+
+## Test Execution and Visibility
 
 - Test cases must be **independently executable** without requiring manual setup beyond documented prerequisites.
 - Each test must be runnable in isolation (single command or single entry point).
-- Test results must be **immediately and clearly visible**, including:
-  - Explicit pass/fail status
-  - Clear identification of the failing condition when a test fails
-- Tests must not rely on interactive input or hidden runtime state.
-- Silent success or failure is not allowed; outcomes must be observable through standard output or the testing framework’s reporting mechanism.
+- Test results must be **immediately and clearly visible**.
+- Silent success or failure is not allowed.
+
+---
+
+## Test Result Transparency
+
+- Test results must be **understandable at a glance**.
+- The test output must provide a clear, structured summary including:
+  - Total number of tests executed
+  - Number of passed, failed, and skipped tests
+  - A clear overall success or failure indicator
+- For each test case, it must be possible to **inspect detailed execution data**, including:
+  - Input data and system state **before** the function execution
+  - Output values and system state **after** the function execution
+  - The actual result produced by the function
+  - The expected result derived from postconditions
+- When a test fails, the output must clearly show:
+  - Which precondition or postcondition was violated
+  - The difference between expected and actual results
+- Test outputs must not require debugging tools to interpret; all critical information must be available through standard test reporting mechanisms.
 
 ---
 
@@ -110,13 +128,6 @@ applyTo: "**"
   - Documented
   - Stable across environments (local development, CI, automation)
 - Any test that cannot be executed through this unified command is considered non-compliant.
-
-### Testing Alignment
-
-- Unit tests must be derivable directly from stated preconditions and postconditions.
-- Each postcondition must have at least one corresponding assertion in a test.
-- Violations of preconditions must be tested and must result in explicit, well-defined errors.
-- Tests must not rely on hidden global state or undocumented side effects.
 
 ---
 
@@ -147,7 +158,7 @@ applyTo: "**"
 - Comments should be minimized and avoided whenever possible.
 - Do not comment on what the code does; comment only on why it exists when necessary.
 - Public APIs, interfaces, and boundaries may include brief documentation comments.
-- Test examples may include minimal comments only when required to clarify intent.
+- Test-related output may include structured labels solely to improve result clarity.
 
 ---
 
