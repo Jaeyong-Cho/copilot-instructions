@@ -49,13 +49,6 @@ applyTo: "**"
   - Output integrity
 - Assertions must not restate trivial facts already guaranteed by the type system.
 
-### Design Implications
-
-- A function whose preconditions are complex or difficult to state likely violates single-responsibility or abstraction-level rules.
-- Postconditions must not depend on undocumented side effects.
-- Functions with side effects must explicitly include those effects in their postconditions.
-- If a function cannot clearly state its postconditions, its design must be reconsidered.
-
 ---
 
 ## Test Case Requirements
@@ -67,74 +60,64 @@ applyTo: "**"
 - Test cases must be:
   - Directly traceable to the function’s preconditions and postconditions
   - Deterministic and repeatable
-  - Written using the project’s standard testing framework or a clearly defined equivalent
-- Functions with multiple logical branches must provide test examples covering:
-  - The primary success path
-  - Meaningful edge cases derived from contract boundaries
 - If a function cannot be accompanied by a clear test example, its design is considered incomplete.
 
 ---
 
 ## Test Execution and Visibility
 
-- Test cases must be **independently executable** without requiring manual setup beyond documented prerequisites.
-- Each test must be runnable in isolation (single command or single entry point).
-- Test results must be **immediately and clearly visible**.
+- Test cases must be **independently executable**.
+- All tests must be executable via a **single, well-defined command**.
+- Test results must be **immediately visible and understandable at a glance**.
 - Silent success or failure is not allowed.
 
 ---
 
 ## Test Result Transparency
 
-- Test results must be **understandable at a glance**.
-- The test output must provide a clear, structured summary including:
-  - Total number of tests executed
-  - Number of passed, failed, and skipped tests
-  - A clear overall success or failure indicator
-- For each test case, it must be possible to **inspect detailed execution data**, including:
-  - Input data and system state **before** the function execution
-  - Output values and system state **after** the function execution
-  - The actual result produced by the function
-  - The expected result derived from postconditions
-- When a test fails, the output must clearly show:
-  - Which precondition or postcondition was violated
-  - The difference between expected and actual results
-- Test outputs must not require debugging tools to interpret; all critical information must be available through standard test reporting mechanisms.
+- Test output must include:
+  - Total, passed, failed, and skipped test counts
+  - Clear overall success or failure status
+- For each test, it must be possible to inspect:
+  - Input data and state **before** execution
+  - Output data and state **after** execution
+  - Expected results versus actual results
+- Failures must clearly indicate which precondition or postcondition was violated.
 
 ---
 
 ## Test Coverage Tracking
 
-- The system must support **explicit tracking of functions that do not have associated tests**.
-- Each function must be traceable to one or more test cases, or be explicitly marked as **untested**.
+- Functions without tests must be explicitly tracked.
 - Untested functions must be:
-  - Discoverable through automated tooling or reports
-  - Clearly identifiable by name, location, and ownership
-- The tracking mechanism must make it possible to:
-  - Enumerate all untested functions
-  - Prioritize test creation based on risk or change frequency
-- Functions marked as untested must not be silently ignored; their status must be visible in development and review workflows.
+  - Discoverable via automated reports
+  - Identifiable by name and location
+- Untested functions must remain visible in review and CI workflows.
 
 ---
 
-## Test Execution Consistency
+## Test Pyramid and Instrumented Testing
 
-- **All tests must be executable via a single, well-defined command**.
-- The command must:
-  - Execute the complete test suite without requiring additional manual steps
-  - Produce a consolidated and readable summary of results
-- Partial or fragmented test execution mechanisms are not allowed.
-- The canonical test command must be:
-  - Documented
-  - Stable across environments (local development, CI, automation)
-- Any test that cannot be executed through this unified command is considered non-compliant.
+- The test strategy must follow the **test pyramid model**:
+  - **Unit tests** as the foundation (fast, isolated, most numerous)
+  - **Integration tests** validating interactions between components
+  - **End-to-End (E2E) tests** validating full system behavior
+- The system must support **instrumented testing** across all pyramid levels.
+- Instrumentation must allow measurement and inspection of:
+  - Execution paths
+  - State transitions
+  - Input/output boundaries
+  - Performance-relevant signals when applicable
+- Each test level must be:
+  - Separately identifiable in reports
+  - Selectively executable if needed
+- Unit, integration, and E2E tests must all be executable through the **single canonical test command**, with clear aggregation and breakdown of results.
 
 ---
 
 ## Naming Conventions
 
 - Names must clearly express intent and responsibility.
-- Avoid abbreviations unless they are widely and commonly understood.
 - Function names should start with verbs.
 - Class and type names should be nouns.
 - Boolean variables should use prefixes such as `is`, `has`, or `can`.
@@ -143,63 +126,49 @@ applyTo: "**"
 
 ## Code Readability
 
-- Code should be written in a clear, readable, and consistent style.
-- Prefer positive conditions over negative ones in conditional statements.
-- Complex conditional expressions must be extracted into well-named variables or functions.
-- Avoid magic numbers; define constants with meaningful names instead.
-- Write one logical idea per line.
-- Keep line length within a reasonable limit (e.g., 100–120 characters).
-- Use blank lines to separate logical sections of code.
+- Code should be written in a clear and consistent style.
+- Avoid magic numbers; use named constants.
+- Keep line length reasonable (100–120 characters).
+- Separate logical sections with blank lines.
 
 ---
 
 ## Comments and Documentation
 
-- Comments should be minimized and avoided whenever possible.
-- Do not comment on what the code does; comment only on why it exists when necessary.
-- Public APIs, interfaces, and boundaries may include brief documentation comments.
-- Test-related output may include structured labels solely to improve result clarity.
+- Minimize comments.
+- Do not explain *what* the code does; explain *why* only when necessary.
+- Public APIs may include brief documentation comments.
 
 ---
 
 ## Control Flow and Error Handling
 
-- Reduce the use of `else` by structuring code with clear and explicit branches.
+- Avoid deep nesting; prefer early returns.
 - Do not silently ignore errors.
-- Clearly separate error-handling logic from normal execution paths.
-- Prefer explicit error types or mechanisms over implicit error signaling.
+- Separate error-handling paths from normal execution.
+- Prefer explicit error types.
 
 ---
 
 ## Modularity and Dependencies
 
-- Organize code into well-defined, cohesive modules.
-- Dependencies must flow in a single direction.
-- Circular dependencies are not allowed.
-- Minimize reliance on global state; define clear ownership when unavoidable.
-- Depend on abstractions or interfaces rather than concrete implementations.
-- Isolate external libraries behind dedicated layers.
+- Organize code into cohesive modules.
+- Dependencies must be acyclic and flow in one direction.
+- External libraries must be isolated behind abstraction layers.
 
 ---
 
 ## Testability and Maintainability
 
-- Design code to be easy to test, especially in areas that change frequently.
-- Limit side effects to well-defined boundaries.
-- Code should be structured so that the impact of changes is predictable.
-- Code that is difficult to test should be considered a maintenance risk.
+- Limit side effects.
+- Design for predictable change impact.
+- Code that is difficult to test is a maintenance risk.
 
 ---
 
 ## Logging
 
-- Logging must be used sparingly and intentionally.
-- Logs should exist only at meaningful boundaries or critical decision points.
-- Do not log information that can be inferred directly from code flow.
-- Avoid repetitive, verbose, or low-value logs.
-- Logs must improve understanding of system behavior, not add noise.
-- Logging must never be used as a substitute for proper error handling.
-- Log messages must be clear, concise, and written in plain language.
-- Avoid logging inside tight loops or high-frequency execution paths.
-- Sensitive or unnecessary internal details must not be logged.
-- The absence of a log should be the default; add logs only when they provide clear diagnostic value.
+- Logging must be intentional and minimal.
+- Logs must improve understanding, not add noise.
+- Logging must never replace proper error handling.
+- Avoid logging in tight or high-frequency paths.
