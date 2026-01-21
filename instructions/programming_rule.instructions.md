@@ -7,6 +7,8 @@ applyTo: "**"
 - Everything must be written in English.
 - Emojis must never be used.
 
+---
+
 ## Function Design
 
 - The length of a single function must not exceed 60 lines.
@@ -21,6 +23,8 @@ applyTo: "**"
 - Each function must include at least two assertions that explicitly validate critical assumptions or invariants.
 - Assertions must check meaningful preconditions, postconditions, or internal invariants, not trivial or redundant conditions.
 - Assertions must not be used as a replacement for proper error handling in production paths.
+
+---
 
 ## Function Contracts (Preconditions and Postconditions)
 
@@ -52,11 +56,69 @@ applyTo: "**"
 - Functions with side effects must explicitly include those effects in their postconditions.
 - If a function cannot clearly state its postconditions, its design must be reconsidered.
 
+---
+
+## Test Case Requirements
+
+- Every function **must provide at least one concrete, executable test example**.
+- Test examples must demonstrate:
+  - A valid invocation that satisfies all preconditions
+  - Verification of all stated postconditions
+- Test cases must be:
+  - Directly traceable to the function’s preconditions and postconditions
+  - Deterministic and repeatable
+  - Written using the project’s standard testing framework or a clearly defined equivalent
+- Functions with multiple logical branches must provide test examples covering:
+  - The primary success path
+  - Meaningful edge cases derived from contract boundaries
+- If a function cannot be accompanied by a clear test example, its design is considered incomplete.
+
+### Test Execution and Visibility
+
+- Test cases must be **independently executable** without requiring manual setup beyond documented prerequisites.
+- Each test must be runnable in isolation (single command or single entry point).
+- Test results must be **immediately and clearly visible**, including:
+  - Explicit pass/fail status
+  - Clear identification of the failing condition when a test fails
+- Tests must not rely on interactive input or hidden runtime state.
+- Silent success or failure is not allowed; outcomes must be observable through standard output or the testing framework’s reporting mechanism.
+
+---
+
+## Test Coverage Tracking
+
+- The system must support **explicit tracking of functions that do not have associated tests**.
+- Each function must be traceable to one or more test cases, or be explicitly marked as **untested**.
+- Untested functions must be:
+  - Discoverable through automated tooling or reports
+  - Clearly identifiable by name, location, and ownership
+- The tracking mechanism must make it possible to:
+  - Enumerate all untested functions
+  - Prioritize test creation based on risk or change frequency
+- Functions marked as untested must not be silently ignored; their status must be visible in development and review workflows.
+
+---
+
+## Test Execution Consistency
+
+- **All tests must be executable via a single, well-defined command**.
+- The command must:
+  - Execute the complete test suite without requiring additional manual steps
+  - Produce a consolidated and readable summary of results
+- Partial or fragmented test execution mechanisms are not allowed.
+- The canonical test command must be:
+  - Documented
+  - Stable across environments (local development, CI, automation)
+- Any test that cannot be executed through this unified command is considered non-compliant.
+
 ### Testing Alignment
 
 - Unit tests must be derivable directly from stated preconditions and postconditions.
-- Each postcondition must have at least one corresponding test case.
-- Violations of preconditions must result in explicit errors, not undefined behavior.
+- Each postcondition must have at least one corresponding assertion in a test.
+- Violations of preconditions must be tested and must result in explicit, well-defined errors.
+- Tests must not rely on hidden global state or undocumented side effects.
+
+---
 
 ## Naming Conventions
 
@@ -65,6 +127,8 @@ applyTo: "**"
 - Function names should start with verbs.
 - Class and type names should be nouns.
 - Boolean variables should use prefixes such as `is`, `has`, or `can`.
+
+---
 
 ## Code Readability
 
@@ -76,11 +140,16 @@ applyTo: "**"
 - Keep line length within a reasonable limit (e.g., 100–120 characters).
 - Use blank lines to separate logical sections of code.
 
+---
+
 ## Comments and Documentation
 
 - Comments should be minimized and avoided whenever possible.
 - Do not comment on what the code does; comment only on why it exists when necessary.
 - Public APIs, interfaces, and boundaries may include brief documentation comments.
+- Test examples may include minimal comments only when required to clarify intent.
+
+---
 
 ## Control Flow and Error Handling
 
@@ -88,6 +157,8 @@ applyTo: "**"
 - Do not silently ignore errors.
 - Clearly separate error-handling logic from normal execution paths.
 - Prefer explicit error types or mechanisms over implicit error signaling.
+
+---
 
 ## Modularity and Dependencies
 
@@ -98,12 +169,16 @@ applyTo: "**"
 - Depend on abstractions or interfaces rather than concrete implementations.
 - Isolate external libraries behind dedicated layers.
 
+---
+
 ## Testability and Maintainability
 
 - Design code to be easy to test, especially in areas that change frequently.
 - Limit side effects to well-defined boundaries.
 - Code should be structured so that the impact of changes is predictable.
 - Code that is difficult to test should be considered a maintenance risk.
+
+---
 
 ## Logging
 
