@@ -3,10 +3,12 @@ applyTo: "**"
 ---
 
 # Global Programming Rules
+
 - Everything must be written in English.
 - Emojis must never be used.
 
 ## Function Design
+
 - The length of a single function must not exceed 60 lines.
 - A function must perform only a single responsibility.
 - Code that is used repeatedly must be extracted into reusable functions.
@@ -20,14 +22,52 @@ applyTo: "**"
 - Assertions must check meaningful preconditions, postconditions, or internal invariants, not trivial or redundant conditions.
 - Assertions must not be used as a replacement for proper error handling in production paths.
 
+## Function Contracts (Preconditions and Postconditions)
+
+- Every function must explicitly define its **preconditions** and **postconditions**.
+- Preconditions describe assumptions that must be true **before** the function is invoked.
+- Postconditions describe guarantees that must be true **after** the function completes successfully.
+- Output guarantees (return values and observable effects) must be included as part of the postconditions.
+- Preconditions and postconditions must be:
+  - Precise and unambiguous
+  - Expressed in terms of observable inputs, outputs, and state
+  - Sufficient to support reasoning, testing, and refactoring
+
+### Representation Rules
+
+- Preconditions and postconditions must be expressed using one or more of the following:
+  - Assertions inside the function body
+  - Explicit type definitions or domain-specific types
+  - Public API documentation comments at module or interface boundaries
+- Assertions used for contracts must validate:
+  - Input validity
+  - Required invariants
+  - Output integrity
+- Assertions must not restate trivial facts already guaranteed by the type system.
+
+### Design Implications
+
+- A function whose preconditions are complex or difficult to state likely violates single-responsibility or abstraction-level rules.
+- Postconditions must not depend on undocumented side effects.
+- Functions with side effects must explicitly include those effects in their postconditions.
+- If a function cannot clearly state its postconditions, its design must be reconsidered.
+
+### Testing Alignment
+
+- Unit tests must be derivable directly from stated preconditions and postconditions.
+- Each postcondition must have at least one corresponding test case.
+- Violations of preconditions must result in explicit errors, not undefined behavior.
+
 ## Naming Conventions
+
 - Names must clearly express intent and responsibility.
 - Avoid abbreviations unless they are widely and commonly understood.
 - Function names should start with verbs.
 - Class and type names should be nouns.
-- Boolean variables should use prefixes such as is, has, or can.
+- Boolean variables should use prefixes such as `is`, `has`, or `can`.
 
 ## Code Readability
+
 - Code should be written in a clear, readable, and consistent style.
 - Prefer positive conditions over negative ones in conditional statements.
 - Complex conditional expressions must be extracted into well-named variables or functions.
@@ -37,17 +77,20 @@ applyTo: "**"
 - Use blank lines to separate logical sections of code.
 
 ## Comments and Documentation
+
 - Comments should be minimized and avoided whenever possible.
 - Do not comment on what the code does; comment only on why it exists when necessary.
 - Public APIs, interfaces, and boundaries may include brief documentation comments.
 
 ## Control Flow and Error Handling
-- Reduce the use of else by structuring code with clear and explicit branches.
+
+- Reduce the use of `else` by structuring code with clear and explicit branches.
 - Do not silently ignore errors.
 - Clearly separate error-handling logic from normal execution paths.
 - Prefer explicit error types or mechanisms over implicit error signaling.
 
 ## Modularity and Dependencies
+
 - Organize code into well-defined, cohesive modules.
 - Dependencies must flow in a single direction.
 - Circular dependencies are not allowed.
@@ -56,12 +99,14 @@ applyTo: "**"
 - Isolate external libraries behind dedicated layers.
 
 ## Testability and Maintainability
+
 - Design code to be easy to test, especially in areas that change frequently.
 - Limit side effects to well-defined boundaries.
 - Code should be structured so that the impact of changes is predictable.
 - Code that is difficult to test should be considered a maintenance risk.
 
 ## Logging
+
 - Logging must be used sparingly and intentionally.
 - Logs should exist only at meaningful boundaries or critical decision points.
 - Do not log information that can be inferred directly from code flow.
