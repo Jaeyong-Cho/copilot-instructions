@@ -21,7 +21,7 @@ applyTo: "**"
 - Indentation must not be nested more than two levels deep.
 - Use early returns to reduce nested control structures.
 - Each function must include at least two assertions that explicitly validate critical assumptions or invariants.
-- Assertions must check meaningful preconditions, postconditions, or internal invariants, not trivial or redundant conditions.
+- Assertions must check meaningful preconditions, postconditions, or internal invariants.
 - Assertions must not be used as a replacement for proper error handling in production paths.
 
 ---
@@ -37,17 +37,44 @@ applyTo: "**"
   - Expressed in terms of observable inputs, outputs, and state
   - Sufficient to support reasoning, testing, and refactoring
 
-### Representation Rules
+---
 
-- Preconditions and postconditions must be expressed using one or more of the following:
-  - Assertions inside the function body
-  - Explicit type definitions or domain-specific types
-  - Public API documentation comments at module or interface boundaries
-- Assertions used for contracts must validate:
-  - Input validity
-  - Required invariants
-  - Output integrity
-- Assertions must not restate trivial facts already guaranteed by the type system.
+## Function Documentation (Doxygen Style)
+
+- **Every function must be documented using Doxygen-style comments.**
+- Documentation must be colocated immediately above the function definition.
+- Doxygen comments are mandatory even for private or internal functions.
+
+### Required Doxygen Tags
+
+Each function documentation block must include, at minimum:
+
+- `@brief`  
+  - A concise, single-sentence summary of the function’s responsibility.
+- `@param`  
+  - One entry per parameter.
+  - Each parameter description must state:
+    - Expected constraints
+    - Semantic meaning
+    - Relevant preconditions
+- `@return`  
+  - Description of the return value.
+  - Must explicitly state postconditions related to the return value.
+- `@pre`  
+  - Formalized preconditions required before invocation.
+- `@post`  
+  - Formalized postconditions guaranteed after successful execution.
+- `@throws` / `@error` (language-appropriate)  
+  - All explicit error conditions or failure modes.
+
+### Documentation Rules
+
+- Documentation must describe **intent and contract**, not implementation details.
+- Preconditions and postconditions in documentation must align with:
+  - Assertions in the function body
+  - Test cases validating the function
+- Documentation must be kept accurate; outdated documentation is considered a defect.
+- If a function cannot be clearly documented using these tags, its design must be reconsidered.
 
 ---
 
@@ -57,16 +84,12 @@ applyTo: "**"
 - Test examples must demonstrate:
   - A valid invocation that satisfies all preconditions
   - Verification of all stated postconditions
-- Test cases must be:
-  - Directly traceable to the function’s preconditions and postconditions
-  - Deterministic and repeatable
-- If a function cannot be accompanied by a clear test example, its design is considered incomplete.
+- Tests must be deterministic and repeatable.
 
 ---
 
 ## Test Execution and Visibility
 
-- Test cases must be **independently executable**.
 - All tests must be executable via a **single, well-defined command**.
 - Test results must be **immediately visible and understandable at a glance**.
 - Silent success or failure is not allowed.
@@ -89,29 +112,23 @@ applyTo: "**"
 ## Test Coverage Tracking
 
 - Functions without tests must be explicitly tracked.
-- Untested functions must be:
-  - Discoverable via automated reports
-  - Identifiable by name and location
+- Untested functions must be discoverable via automated reports.
 - Untested functions must remain visible in review and CI workflows.
 
 ---
 
 ## Test Pyramid and Instrumented Testing
 
-- The test strategy must follow the **test pyramid model**:
-  - **Unit tests** as the foundation (fast, isolated, most numerous)
-  - **Integration tests** validating interactions between components
-  - **End-to-End (E2E) tests** validating full system behavior
-- The system must support **instrumented testing** across all pyramid levels.
-- Instrumentation must allow measurement and inspection of:
+- The test strategy must follow the **test pyramid**:
+  - Unit tests (primary, isolated, fast)
+  - Integration tests (component interactions)
+  - End-to-End tests (full system behavior)
+- Instrumented testing must be supported at all levels.
+- Instrumentation must allow inspection of:
   - Execution paths
   - State transitions
   - Input/output boundaries
-  - Performance-relevant signals when applicable
-- Each test level must be:
-  - Separately identifiable in reports
-  - Selectively executable if needed
-- Unit, integration, and E2E tests must all be executable through the **single canonical test command**, with clear aggregation and breakdown of results.
+- All test levels must be executable through the **single canonical test command** with clear breakdowns.
 
 ---
 
@@ -126,24 +143,16 @@ applyTo: "**"
 
 ## Code Readability
 
-- Code should be written in a clear and consistent style.
+- Code must be clear, consistent, and readable.
 - Avoid magic numbers; use named constants.
-- Keep line length reasonable (100–120 characters).
+- Keep line length within 100–120 characters.
 - Separate logical sections with blank lines.
-
----
-
-## Comments and Documentation
-
-- Minimize comments.
-- Do not explain *what* the code does; explain *why* only when necessary.
-- Public APIs may include brief documentation comments.
 
 ---
 
 ## Control Flow and Error Handling
 
-- Avoid deep nesting; prefer early returns.
+- Prefer early returns over deep nesting.
 - Do not silently ignore errors.
 - Separate error-handling paths from normal execution.
 - Prefer explicit error types.
@@ -153,14 +162,15 @@ applyTo: "**"
 ## Modularity and Dependencies
 
 - Organize code into cohesive modules.
-- Dependencies must be acyclic and flow in one direction.
+- Dependencies must flow in a single direction.
+- Circular dependencies are not allowed.
 - External libraries must be isolated behind abstraction layers.
 
 ---
 
 ## Testability and Maintainability
 
-- Limit side effects.
+- Limit side effects to well-defined boundaries.
 - Design for predictable change impact.
 - Code that is difficult to test is a maintenance risk.
 
@@ -169,6 +179,6 @@ applyTo: "**"
 ## Logging
 
 - Logging must be intentional and minimal.
-- Logs must improve understanding, not add noise.
+- Logs must improve understanding of system behavior.
 - Logging must never replace proper error handling.
-- Avoid logging in tight or high-frequency paths.
+- Avoid logging in tight or high-frequency execution paths.
