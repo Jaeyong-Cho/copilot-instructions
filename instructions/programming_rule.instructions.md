@@ -178,7 +178,9 @@ Each function documentation block must include, at minimum:
 
 ## Logging
 
-- Logging must be intentional and minimal.
-- Logs must improve understanding of system behavior.
+- Logging must be **sufficiently detailed to allow clear understanding of execution flow**.
+- Logs must be written at **key execution points** (e.g., state transitions, decision boundaries, external interactions).
+- Logging must support **traceability, debugging, and post-mortem analysis**.
+- Logs must be **intentional and semantically meaningful**.
 - Logging must never replace proper error handling.
-- Avoid logging in tight or high-frequency execution paths.
+- Logging in tight or high-frequency execution paths must be **explicitly justified**.
