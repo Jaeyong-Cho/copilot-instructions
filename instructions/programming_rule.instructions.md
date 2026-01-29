@@ -26,6 +26,51 @@ applyTo: "**"
 
 ---
 
+## Source File Size and Decomposition
+
+- A source file must remain **small enough to be fully understood without scrolling excessively**.
+- If a source file grows beyond a reasonable size or contains multiple responsibilities, it **must be split**.
+- A source file should represent **one cohesive concept, module, or responsibility**.
+- File size limits must be enforced by:
+  - Logical cohesion
+  - Responsibility boundaries
+  - Change frequency considerations
+- Large files are considered a **design smell**, not a formatting issue.
+
+---
+
+## Change Frequency–Aware Design
+
+- When designing or refactoring, components **must be explicitly classified** based on how often they are expected to change.
+
+### Stable Components (Hard to Change)
+
+- Represent core domain rules, invariants, or fundamental abstractions.
+- Should be:
+  - Simple
+  - Highly constrained
+  - Heavily tested
+- Must not depend on volatile components.
+- Changes to stable components must be rare and deliberate.
+
+### Volatile Components (Easy to Change)
+
+- Represent policies, configurations, UI logic, workflows, or integration details.
+- Should be:
+  - Loosely coupled
+  - Easily replaceable
+  - Isolated behind interfaces or abstractions
+- Must depend on stable components, never the reverse.
+
+### Design Rules
+
+- Dependencies must flow from **volatile → stable**, never from stable → volatile.
+- When splitting files or modules, **change frequency is a primary axis**, not just functionality.
+- If two pieces of code change for different reasons or at different rates, they **must not live in the same file or module**.
+- Refactoring decisions must prefer isolating volatility over minimizing file count.
+
+---
+
 ## Function Contracts (Preconditions and Postconditions)
 
 - Every function must explicitly define its **preconditions** and **postconditions**.
@@ -67,20 +112,12 @@ Each function documentation block must include, at minimum:
 - `@throws` / `@error` (language-appropriate)  
   - All explicit error conditions or failure modes.
 
-### Documentation Rules
-
-- Documentation must describe **intent and contract**, not implementation details.
-- Preconditions and postconditions in documentation must align with:
-  - Assertions in the function body
-  - Test cases validating the function
-- Documentation must be kept accurate; outdated documentation is considered a defect.
-- If a function cannot be clearly documented using these tags, its design must be reconsidered.
-
 ---
 
 ## Test Case Requirements
 
 - Every function **must provide at least one concrete, executable test example**.
+- Test cases must be executable **independently** and allow results to be easily observed.
 - Test examples must demonstrate:
   - A valid invocation that satisfies all preconditions
   - Verification of all stated postconditions
@@ -178,9 +215,7 @@ Each function documentation block must include, at minimum:
 
 ## Logging
 
-- Logging must be **sufficiently detailed to allow clear understanding of execution flow**.
-- Logs must be written at **key execution points** (e.g., state transitions, decision boundaries, external interactions).
-- Logging must support **traceability, debugging, and post-mortem analysis**.
-- Logs must be **intentional and semantically meaningful**.
+- Logging must be intentional and minimal.
+- Logs must improve understanding of system behavior.
 - Logging must never replace proper error handling.
-- Logging in tight or high-frequency execution paths must be **explicitly justified**.
+- Avoid logging in tight or high-frequency execution paths.
